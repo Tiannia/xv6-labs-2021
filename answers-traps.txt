@@ -1,0 +1,6 @@
+1. register a0-a7; register a2 hold 13
+2. call of f in main is direct inline as immediate number 12; call of g in f is inline 32-35
+3. 0x630
+4. 0x38
+5. He110 World; 0x726c6400; no need to change
+6. the value stored in a2 register
