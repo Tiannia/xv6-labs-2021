@@ -50,7 +50,8 @@ usertrap(void)
   // save user program counter.
   p->trapframe->epc = r_sepc();
   
-  if(r_scause() == 8){
+  uint64 code = r_scause();
+  if(code == 8){
     // system call
 
     if(p->killed)
@@ -65,6 +66,14 @@ usertrap(void)
     intr_on();
 
     syscall();
+  } else if(code == 15 || code == 13){
+    // load page fault or store page fault.
+    uint64 va = r_stval();
+    if(va >= p->sz
+      || iscowpage(p->pagetable, va) != 0
+      || cowalloc(p->pagetable, PGROUNDDOWN(va)) == 0){
+      p->killed = 1;
+    }
   } else if((which_dev = devintr()) != 0){
     // ok
   } else {
