@@ -1,0 +1,18 @@
+Q: Why are there missing keys with 2 threads, but not with 1 thread?
+A: Because the function should also be tested with multiple threads.
+
+Q: Identify a sequence of events with 2 threads that can lead to a key being missing. 
+A: when two thread call insert in the same time, and set e->next to the same entry, but in the end, only one entry can be the head of list.
+
+Test
+---
+bucket level lock:
+❯ ./ph 1
+100000 puts, 21.410 seconds, 4671 puts/second
+0: 0 keys missing
+100000 gets, 29.427 seconds, 3398 gets/second
+❯ ./ph 2
+100000 puts, 12.924 seconds, 7738 puts/second
+1: 0 keys missing
+0: 0 keys missing
+200000 gets, 14.517 seconds, 13777 gets/second
